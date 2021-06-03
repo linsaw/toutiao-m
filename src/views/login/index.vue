@@ -56,7 +56,7 @@
       </div>
     </van-form>
     <div>
-      <p>账号：13922222222</p>
+      <p>账号：13911111111 13922222222</p>
       <p>验证码：246810</p>
     </div>
   </div>
@@ -72,8 +72,8 @@ export default {
   data () {
     return {
       user: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111',
+        code: '246810'
       },
       formRules: {
         mobile: [
@@ -82,7 +82,7 @@ export default {
         ],
         code: [
           { required: true, message: '请输入验证码' },
-          { pattern: /^d{6}$/, message: '验证码格式错误' }
+          { pattern: /^\d{6}$/, message: '验证码格式错误' }
         ]
       },
       isSendSmsCodeLoading: false,
@@ -136,9 +136,12 @@ export default {
         duration: 0
       })
       try {
-        const res = await login(this.user)
-        console.log(res)
+        const { data } = await login(this.user)
         this.$toast.success('登录成功')
+        // 存储用户登录Token
+        this.$store.commit('setUserToken', data.data)
+        // 跳转页面
+        this.$router.back()
       } catch (err) {
         console.log(err)
         this.$toast.success('登录失败')
