@@ -5,6 +5,7 @@
                       :success-text="refreshSuccessText"
                       :success-duration="1000">
       <van-list
+        ref="article-list"
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
@@ -21,6 +22,7 @@
 <script>
 import { getArticlesList } from '@/api/article'
 import ArticleListCell from '@/components/article-list-cell'
+import { debounce } from 'lodash'
 
 export default {
   name: 'ArticleList',
@@ -40,13 +42,25 @@ export default {
       finished: false,
       timestamp: null, // 获取下一页数据的时间戳
       isRefreshLoading: false, // 下拉刷新的 loading 状态
-      refreshSuccessText: '更新成功' // 下拉刷新成功的提示文本
+      refreshSuccessText: '更新成功', // 下拉刷新成功的提示文本
+      scrollTop: 0 // 列表滚动到顶部的距离
     }
   },
   computed: {},
   watch: {},
   created () {},
-  mounted () {},
+  mounted () {
+    const articleList = this.$refs['article-list']
+    articleList.onscroll = debounce(() => {
+      this.scrollTop = articleList.scrollTop
+    }, 50)
+  },
+  activated () {
+    this.$refs['article-list'].scrollTop = this.scrollTop
+  },
+  deactivated () {
+    console.log('组件失去活动了')
+  },
   methods: {
     async onLoad () {
       const { data } = await getArticlesList({

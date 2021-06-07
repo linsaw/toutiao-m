@@ -7,7 +7,15 @@
       left-arrow
       @click-left="$router.back()"
     />
-    <van-cell title="头像" is-link>
+    <!-- input设置隐藏，van-cell手动设置点击响应 -->
+    <!-- accept设置文件类型 image/* 代表所有格式图片 -->
+    <input
+      type="file"
+      hidden
+      ref="avatarRef"
+      accept="image/*"
+      @change="onFileChange">
+    <van-cell title="头像" is-link @click="$refs.avatarRef.click()">
       <van-image width="30"
                  height="30"
                  round
@@ -54,6 +62,17 @@
         v-model="user.gender"
         @close="isEditGenderShow=false"/>
     </van-popup>
+
+    <van-popup class="edit-avatar-popup"
+               v-model="isEditAvatarShow"
+               position="bottom"
+               :style="{ height: '100%' }">
+      <edit-avatar
+        v-if="isEditAvatarShow"
+        :file="avatarPreview"
+        @close="isEditAvatarShow=false"
+        @update-avatar="user.photo=$event"/>
+    </van-popup>
   </div>
 </template>
 
@@ -61,19 +80,23 @@
 import { getUserProfile } from '@/api/user'
 import EditName from './components/edit-name'
 import EditGender from './components/edit-gender'
+import EditAvatar from './components/edit-avatar'
 
 export default {
   name: 'UserProfile',
   components: {
     EditName,
-    EditGender
+    EditGender,
+    EditAvatar
   },
   props: {},
   data () {
     return {
       user: {},
       isEditNameShow: false,
-      isEditGenderShow: false
+      isEditGenderShow: false,
+      isEditAvatarShow: false,
+      avatarPreview: null
     }
   },
   computed: {},
@@ -86,6 +109,14 @@ export default {
     async loadUserProfile () {
       const { data } = await getUserProfile()
       this.user = data.data
+    },
+    onFileChange () {
+      const file = this.$refs.avatarRef.files[0]
+      this.avatarPreview = file
+      // 预览图片
+      this.isEditAvatarShow = true
+      // 为了解决相同文件不触发change事件，手动清空file的value
+      this.$refs.avatarRef.value = ''
     }
   }
 }
@@ -94,5 +125,8 @@ export default {
 <style scoped lang="less">
 .van-popup {
   background-color: #f5f7f9;
+}
+.edit-avatar-popup {
+  background-color: black;
 }
 </style>

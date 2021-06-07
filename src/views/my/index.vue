@@ -44,7 +44,12 @@
       </van-grid>
     </van-cell-group>
     <div v-else class="not-login">
-      <div @click="$router.push('/login')">
+      <div @click="$router.push({
+        name: 'login',
+        query: {
+          redirect: '/my'
+        }
+      })">
         <img class="mobile-icon" src="./mobile.png" alt="">
       </div>
       <div class="text">登录 / 注册</div>
@@ -54,7 +59,7 @@
       <van-grid-item class="nav-grid-item" icon-prefix="toutiao" icon="lishi" text="历史"/>
     </van-grid>
     <van-cell v-if="userToken" title="消息通知" is-link to="/"/>
-    <van-cell class="mb-4" title="小智同学" is-link to="/"/>
+    <van-cell class="mb-4" title="小智同学" is-link to="/user/chat"/>
     <van-cell v-if="userToken"
               class="logout-cell"
               title="退出登录"

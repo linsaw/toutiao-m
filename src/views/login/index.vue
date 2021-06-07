@@ -140,8 +140,11 @@ export default {
         this.$toast.success('登录成功')
         // 存储用户登录Token
         this.$store.commit('setUserToken', data.data)
+        // 清除layout的缓存，重新渲染页面
+        this.$store.commit('removeCachePage', 'LayoutIndex')
         // 跳转页面
-        this.$router.back()
+        // this.$router.back()
+        this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         console.log(err)
         this.$toast.success('登录失败')

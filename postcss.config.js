@@ -2,6 +2,20 @@
  * PostCSS配置文件
  */
 module.exports = {
+  // dev: {
+  //   // Paths
+  //   assetsSubDirectory: 'static',
+  //   assetsPublicPath: '/',
+  //   proxyTable: {
+  //     '/api': {
+  //       target: 'http://localhost:8080', // 后期可以改
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/api': ''
+  //       }
+  //     }
+  //   } // 配置跨域支持
+  // },
   // 配置要使用的相关插件
   plugins: {
     // // 自动添加浏览器厂商声明浅醉，兼容不同浏览器
